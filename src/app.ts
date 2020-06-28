@@ -1,14 +1,18 @@
 //autobind decorator
-function Autobind(_target: any, _methodName: string, descriptor: PropertyDescriptor){
+function Autobind(
+	_target: any,
+	_methodName: string,
+	descriptor: PropertyDescriptor
+) {
 	const originalMethod = descriptor.value;
 	const adjustedDescriptor: PropertyDescriptor = {
 		configurable: true,
-		
+
 		get() {
 			const boundFunction = originalMethod.bind(this);
 			return boundFunction;
-		}
-	}
+		},
+	};
 	return adjustedDescriptor;
 }
 
@@ -35,9 +39,15 @@ class ProjectInput {
 		//connected css #user-input to form
 		this.formElement.id = "user-input";
 
-		this.titleInputElement = this.formElement.querySelector('#title') as HTMLInputElement;
-		this.descriptionInputElement = this.formElement.querySelector('#description') as HTMLInputElement;
-		this.peopleInputElement = this.formElement.querySelector('#people') as HTMLInputElement;
+		this.titleInputElement = this.formElement.querySelector(
+			"#title"
+		) as HTMLInputElement;
+		this.descriptionInputElement = this.formElement.querySelector(
+			"#description"
+		) as HTMLInputElement;
+		this.peopleInputElement = this.formElement.querySelector(
+			"#people"
+		) as HTMLInputElement;
 
 		this.configure();
 		this.attach();
@@ -81,7 +91,7 @@ class ProjectInput {
 		}
 	}
 
-	private configure(){
+	private configure() {
 		this.formElement.addEventListener("submit", this.submitHandler);
 	}
 }

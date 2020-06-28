@@ -13,7 +13,7 @@ function Autobind(_target, _methodName, descriptor) {
         get() {
             const boundFunction = originalMethod.bind(this);
             return boundFunction;
-        }
+        },
     };
     return adjustedDescriptor;
 }
@@ -26,9 +26,9 @@ class ProjectInput {
         this.formElement = importedForms.firstElementChild;
         //connected css #user-input to form
         this.formElement.id = "user-input";
-        this.titleInputElement = this.formElement.querySelector('#title');
-        this.descriptionInputElement = this.formElement.querySelector('#description');
-        this.peopleInputElement = this.formElement.querySelector('#people');
+        this.titleInputElement = this.formElement.querySelector("#title");
+        this.descriptionInputElement = this.formElement.querySelector("#description");
+        this.peopleInputElement = this.formElement.querySelector("#people");
         this.configure();
         this.attach();
     }
@@ -37,7 +37,31 @@ class ProjectInput {
     }
     submitHandler(event) {
         event.preventDefault();
-        console.log(this.titleInputElement.value);
+        const userInput = this.gatherUserInput();
+        if (userInput) {
+            const [title, description, people] = userInput;
+            // console.log([title, description, people]);
+            this.clearFormsAfterSubmiting();
+        }
+    }
+    clearFormsAfterSubmiting() {
+        this.titleInputElement.value = "";
+        this.descriptionInputElement.value = "";
+        this.peopleInputElement.value = "";
+    }
+    gatherUserInput() {
+        const enteredTitle = this.titleInputElement.value;
+        const enteredDescription = this.descriptionInputElement.value;
+        const enteredPeople = this.peopleInputElement.value;
+        if (enteredTitle.trim().length === 0 ||
+            enteredDescription.trim().length === 0 ||
+            enteredPeople.trim().length === 0) {
+            alert(`Invalid input, please try again!`);
+            return;
+        }
+        else {
+            return [enteredTitle, enteredDescription, +enteredPeople];
+        }
     }
     configure() {
         this.formElement.addEventListener("submit", this.submitHandler);
