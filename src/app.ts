@@ -24,11 +24,22 @@ class ProjectInput {
 		this.titleInputElement = this.formElement.querySelector('#title') as HTMLInputElement;
 		this.descriptionInputElement = this.formElement.querySelector('#description') as HTMLInputElement;
 		this.peopleInputElement = this.formElement.querySelector('#people') as HTMLInputElement;
+
+		this.configure();
 		this.attach();
 	}
 
 	private attach() {
 		this.hostElement.insertAdjacentElement("afterbegin", this.formElement);
+	}
+
+	private submitHandler(event: Event){
+		event.preventDefault();
+		console.log(this.titleInputElement.value)
+	}
+
+	private configure(){
+		this.formElement.addEventListener("submit", this.submitHandler.bind(this));
 	}
 }
 
