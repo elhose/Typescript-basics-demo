@@ -15,6 +15,8 @@ class ProjectInput {
 			true
 		);
 		this.formElement = importedForms.firstElementChild as HTMLFormElement;
+		//connected css #user-input to form
+		this.formElement.id = "user-input";
 		this.attach();
 	}
 
