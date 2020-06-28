@@ -2,6 +2,9 @@ class ProjectInput {
 	templateElement: HTMLTemplateElement;
 	hostElement: HTMLDivElement;
 	formElement: HTMLFormElement;
+	titleInputElement: HTMLInputElement;
+	descriptionInputElement: HTMLInputElement;
+	peopleInputElement: HTMLInputElement;
 
 	constructor() {
 		this.templateElement = document.getElementById(
@@ -17,6 +20,10 @@ class ProjectInput {
 		this.formElement = importedForms.firstElementChild as HTMLFormElement;
 		//connected css #user-input to form
 		this.formElement.id = "user-input";
+
+		this.titleInputElement = this.formElement.querySelector('#title') as HTMLInputElement;
+		this.descriptionInputElement = this.formElement.querySelector('#description') as HTMLInputElement;
+		this.peopleInputElement = this.formElement.querySelector('#people') as HTMLInputElement;
 		this.attach();
 	}
 
