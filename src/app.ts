@@ -173,7 +173,7 @@ class ProjectInput {
         const userInput = this.gatherUserInput();
         if (userInput) {
             const [title, description, people] = userInput;
-            console.log([title, description, people]);
+            projectState.addProject(title, description, people);
             this.clearFormsAfterSubmitting();
         }
     }
