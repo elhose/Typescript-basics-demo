@@ -1,3 +1,43 @@
+//Project State Managment
+
+class ProjectState {
+    private listeners: any[] = [];
+    private projects: any[] = [];
+    private static instance: ProjectState;
+
+    private constructor() {
+    }
+
+    static getInstance() {
+        if (ProjectState.instance) {
+            return ProjectState.instance
+        } else {
+            ProjectState.instance = new ProjectState();
+            return ProjectState.instance;
+        }
+    }
+
+    addListener(listenerFunction: Function) {
+        this.listeners.push(listenerFunction);
+    }
+
+    addProject(title: string, description: string, numberOfPeople: number) {
+        const newProject = {
+            id: Math.random().toString(),
+            title: title,
+            description: description,
+            people: numberOfPeople
+        }
+        this.projects.push(newProject);
+
+        for (const listenerFunction of this.listeners) {
+            listenerFunction(this.projects.slice());
+        }
+    }
+}
+
+const projectState = ProjectState.getInstance();
+
 //validation logic
 interface Validatable {
     value?: string | number;
