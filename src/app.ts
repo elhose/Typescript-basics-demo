@@ -52,6 +52,40 @@ function Autobind(
     return adjustedDescriptor;
 }
 
+// ProjectList Class
+class ProjectList {
+    templateElement: HTMLTemplateElement;
+    hostElement: HTMLDivElement;
+    sectionElement: HTMLElement;
+
+    constructor(private typeOfProject: 'active' | 'finished') {
+        this.templateElement = document.getElementById(
+            "project-list"
+        )! as HTMLTemplateElement;
+        this.hostElement = document.getElementById("app")! as HTMLDivElement;
+
+        const importedNode = document.importNode(
+          this.templateElement.content,
+          true
+        );
+
+        this.sectionElement = importedNode.firstElementChild as HTMLElement;
+        this.sectionElement.id = `${this.typeOfProject}-projects`;
+        this.attach();
+        this.renderContent();
+    }
+
+    private renderContent() {
+        const listId = `${this.typeOfProject}-projects-list`;
+        this.sectionElement.querySelector('ul')!.id = listId;
+        this.sectionElement.querySelector('h2')!.textContent = this.typeOfProject.toUpperCase() + " PROJECTS";
+    }
+
+    private attach() {
+        this.hostElement.insertAdjacentElement("beforeend", this.sectionElement);
+    }
+}
+
 class ProjectInput {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
@@ -100,11 +134,11 @@ class ProjectInput {
         if (userInput) {
             const [title, description, people] = userInput;
             console.log([title, description, people]);
-            this.clearFormsAfterSubmiting();
+            this.clearFormsAfterSubmitting();
         }
     }
 
-    private clearFormsAfterSubmiting() {
+    private clearFormsAfterSubmitting() {
         this.titleInputElement.value = "";
         this.descriptionInputElement.value = "";
         this.peopleInputElement.value = "";
@@ -149,3 +183,5 @@ class ProjectInput {
 }
 
 const projectInput: ProjectInput = new ProjectInput();
+const activeProjectList = new ProjectList("active");
+const finishedProjectList = new ProjectList("finished");

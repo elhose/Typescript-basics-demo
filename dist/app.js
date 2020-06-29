@@ -36,6 +36,27 @@ function Autobind(_target, _methodName, descriptor) {
     };
     return adjustedDescriptor;
 }
+// ProjectList Class
+class ProjectList {
+    constructor(typeOfProject) {
+        this.typeOfProject = typeOfProject;
+        this.templateElement = document.getElementById("project-list");
+        this.hostElement = document.getElementById("app");
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.sectionElement = importedNode.firstElementChild;
+        this.sectionElement.id = `${this.typeOfProject}-projects`;
+        this.attach();
+        this.renderContent();
+    }
+    renderContent() {
+        const listId = `${this.typeOfProject}-projects-list`;
+        this.sectionElement.querySelector('ul').id = listId;
+        this.sectionElement.querySelector('h2').textContent = this.typeOfProject.toUpperCase() + " PROJECTS";
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement("beforeend", this.sectionElement);
+    }
+}
 class ProjectInput {
     constructor() {
         this.templateElement = document.getElementById("project-input");
@@ -60,10 +81,10 @@ class ProjectInput {
         if (userInput) {
             const [title, description, people] = userInput;
             console.log([title, description, people]);
-            this.clearFormsAfterSubmiting();
+            this.clearFormsAfterSubmitting();
         }
     }
-    clearFormsAfterSubmiting() {
+    clearFormsAfterSubmitting() {
         this.titleInputElement.value = "";
         this.descriptionInputElement.value = "";
         this.peopleInputElement.value = "";
@@ -105,3 +126,5 @@ __decorate([
     Autobind
 ], ProjectInput.prototype, "submitHandler", null);
 const projectInput = new ProjectInput();
+const activeProjectList = new ProjectList("active");
+const finishedProjectList = new ProjectList("finished");
