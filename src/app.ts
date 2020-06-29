@@ -186,7 +186,8 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
 
     @Autobind
     dragStartHandler(event: DragEvent): void {
-        console.log("DRAG START")
+        event.dataTransfer!.setData('text/plain', this.project.id);
+        event.dataTransfer!.effectAllowed = 'move';
     }
 
     protected configure() {
@@ -202,7 +203,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
 }
 
 // ProjectList Class
-class ProjectList extends Component<HTMLDivElement, HTMLElement> implements DragTarget{
+class ProjectList extends Component<HTMLDivElement, HTMLElement> implements DragTarget {
     assignedProjects: Project[];
 
     constructor(private typeOfProject: 'active' | 'finished') {
@@ -221,11 +222,15 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
 
     @Autobind
     dragOverHandler(event: DragEvent): void {
-        const listElement = this.element.querySelector('ul')!;
-        listElement.classList.add('droppable');
+        if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
+            event.preventDefault();
+            const listElement = this.element.querySelector('ul')!;
+            listElement.classList.add('droppable');
+        }
     }
 
     dropHandler(event: DragEvent): void {
+        console.log(event.dataTransfer!.getData("text/plain"));
     }
 
     protected renderContent() {
