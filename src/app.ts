@@ -63,6 +63,19 @@ class ProjectState {
         const newProject = new Project(Math.random().toString(), title, description, numberOfPeople, ProjectStatus.Active);
         this.projects.push(newProject);
 
+        this.updateListeners();
+    }
+
+    switchProjectStatus(projectId: string, newStatus: ProjectStatus) {
+        let foundProject = this.projects.find(project => project.id === projectId);
+
+        if (foundProject && foundProject.status !== newStatus) {
+            foundProject.status = newStatus;
+            this.updateListeners();
+        }
+    }
+
+    private updateListeners() {
         for (const listenerFunction of this.listeners) {
             listenerFunction(this.projects.slice());
         }
@@ -230,7 +243,8 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     }
 
     dropHandler(event: DragEvent): void {
-        console.log(event.dataTransfer!.getData("text/plain"));
+        const projectItemId = event.dataTransfer!.getData("text/plain");
+        projectState.switchProjectStatus(projectItemId, this.typeOfProject === "active" ? ProjectStatus.Active : ProjectStatus.Finished);
     }
 
     protected renderContent() {
@@ -262,7 +276,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
         //clear rendered items in list
         listElement.innerHTML = "";
         for (const projectItem of this.assignedProjects) {
-            let projectItem1 = new ProjectItem(this.element.querySelector("ul")!.id, projectItem);
+            new ProjectItem(this.element.querySelector("ul")!.id, projectItem);
         }
     }
 }

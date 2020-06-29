@@ -42,6 +42,16 @@ class ProjectState {
     addProject(title, description, numberOfPeople) {
         const newProject = new Project(Math.random().toString(), title, description, numberOfPeople, ProjectStatus.Active);
         this.projects.push(newProject);
+        this.updateListeners();
+    }
+    switchProjectStatus(projectId, newStatus) {
+        let foundProject = this.projects.find(project => project.id === projectId);
+        if (foundProject && foundProject.status !== newStatus) {
+            foundProject.status = newStatus;
+            this.updateListeners();
+        }
+    }
+    updateListeners() {
         for (const listenerFunction of this.listeners) {
             listenerFunction(this.projects.slice());
         }
@@ -155,7 +165,8 @@ class ProjectList extends Component {
         }
     }
     dropHandler(event) {
-        console.log(event.dataTransfer.getData("text/plain"));
+        const projectItemId = event.dataTransfer.getData("text/plain");
+        projectState.switchProjectStatus(projectItemId, this.typeOfProject === "active" ? ProjectStatus.Active : ProjectStatus.Finished);
     }
     renderContent() {
         const listId = `${this.typeOfProject}-projects-list`;
@@ -184,7 +195,7 @@ class ProjectList extends Component {
         //clear rendered items in list
         listElement.innerHTML = "";
         for (const projectItem of this.assignedProjects) {
-            let projectItem1 = new ProjectItem(this.element.querySelector("ul").id, projectItem);
+            new ProjectItem(this.element.querySelector("ul").id, projectItem);
         }
     }
 }
