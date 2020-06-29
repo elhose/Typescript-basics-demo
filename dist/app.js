@@ -94,6 +94,22 @@ class Component {
         this.hostElement.insertAdjacentElement(positionToInsertElement, this.element);
     }
 }
+//ProjectItem class
+class ProjectItem extends Component {
+    constructor(hostId, project) {
+        super("single-project", hostId, "beforeend", project.id);
+        this.project = project;
+        this.configure();
+        this.renderContent();
+    }
+    configure() {
+    }
+    renderContent() {
+        this.element.querySelector("h2").textContent = this.project.title;
+        this.element.querySelector("h3").textContent = this.project.people.toString();
+        this.element.querySelector("p").textContent = this.project.description;
+    }
+}
 // ProjectList Class
 class ProjectList extends Component {
     constructor(typeOfProject) {
@@ -127,9 +143,7 @@ class ProjectList extends Component {
         //clear rendered items in list
         listElement.innerHTML = "";
         for (const projectItem of this.assignedProjects) {
-            const listItem = document.createElement("li");
-            listItem.textContent = projectItem.title;
-            listElement.appendChild(listItem);
+            let projectItem1 = new ProjectItem(this.element.querySelector("ul").id, projectItem);
         }
     }
 }
@@ -144,7 +158,8 @@ class ProjectInput extends Component {
     configure() {
         this.element.addEventListener("submit", this.submitHandler);
     }
-    renderContent() { }
+    renderContent() {
+    }
     submitHandler(event) {
         event.preventDefault();
         const userInput = this.gatherUserInput();
