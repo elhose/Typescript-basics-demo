@@ -1,50 +1,49 @@
-namespace App {
-    type Listener = (items: Project[]) => void;
+import {Project, ProjectStatus} from "../models/project.js";
 
-//Project State Managment
-    class ProjectState {
-        private listeners: Listener[] = [];
-        private projects: Project[] = [];
-        private static instance: ProjectState;
+type Listener = (items: Project[]) => void;
 
-        private constructor() {
-        }
+class ProjectState {
+    private listeners: Listener[] = [];
+    private projects: Project[] = [];
+    private static instance: ProjectState;
 
-        static getInstance() {
-            if (ProjectState.instance) {
-                return ProjectState.instance
-            } else {
-                ProjectState.instance = new ProjectState();
-                return ProjectState.instance;
-            }
-        }
+    private constructor() {
+    }
 
-        addListener(listenerFunction: Listener) {
-            this.listeners.push(listenerFunction);
-        }
-
-        addProject(title: string, description: string, numberOfPeople: number) {
-            const newProject = new Project(Math.random().toString(), title, description, numberOfPeople, ProjectStatus.Active);
-            this.projects.push(newProject);
-
-            this.updateListeners();
-        }
-
-        switchProjectStatus(projectId: string, newStatus: ProjectStatus) {
-            let foundProject = this.projects.find(project => project.id === projectId);
-
-            if (foundProject && foundProject.status !== newStatus) {
-                foundProject.status = newStatus;
-                this.updateListeners();
-            }
-        }
-
-        private updateListeners() {
-            for (const listenerFunction of this.listeners) {
-                listenerFunction(this.projects.slice());
-            }
+    static getInstance() {
+        if (ProjectState.instance) {
+            return ProjectState.instance
+        } else {
+            ProjectState.instance = new ProjectState();
+            return ProjectState.instance;
         }
     }
 
-    export const projectState = ProjectState.getInstance();
+    addListener(listenerFunction: Listener) {
+        this.listeners.push(listenerFunction);
+    }
+
+    addProject(title: string, description: string, numberOfPeople: number) {
+        const newProject = new Project(Math.random().toString(), title, description, numberOfPeople, ProjectStatus.Active);
+        this.projects.push(newProject);
+
+        this.updateListeners();
+    }
+
+    switchProjectStatus(projectId: string, newStatus: ProjectStatus) {
+        let foundProject = this.projects.find(project => project.id === projectId);
+
+        if (foundProject && foundProject.status !== newStatus) {
+            foundProject.status = newStatus;
+            this.updateListeners();
+        }
+    }
+
+    private updateListeners() {
+        for (const listenerFunction of this.listeners) {
+            listenerFunction(this.projects.slice());
+        }
+    }
 }
+
+export const projectState = ProjectState.getInstance();
